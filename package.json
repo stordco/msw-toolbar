@@ -1,6 +1,10 @@
 {
+  "name": "@stordco/msw-chakra-toolbar",
+  "author": "STORD",
   "version": "0.1.0",
   "license": "MIT",
+  "homepage": "https://github.com/stordco/msw-chakra-toolbar",
+  "repository": "https://github.com/stordco/msw-chakra-toolbar.git",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -29,7 +33,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint && "
+      "pre-commit": "tsdx lint --fix"
     }
   },
   "prettier": {
@@ -38,8 +42,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "msw-chakra-toolbar",
-  "author": "STORD",
   "module": "dist/msw-chakra-toolbar.esm.js",
   "size-limit": [
     {
@@ -61,7 +63,6 @@
     "framer-motion": "4",
     "husky": "^7.0.0",
     "msw": "^0.35.0",
-    "pretty-quick": "^3.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "size-limit": "^5.0.4",
