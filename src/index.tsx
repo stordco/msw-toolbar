@@ -153,62 +153,55 @@ export const MSWToolbar = ({
 
   if (!isEnabled || !worker) return <>{children}</>;
 
-  return (
+  return isReady ? (
     <>
-      {isReady && (
-        <>
-          <ChakraProvider>
-            <Stack
-              direction={['column', 'column', 'row']}
-              spacing={8}
-              p={2}
-              bg="blue.100"
+      <ChakraProvider>
+        <Stack
+          direction={['column', 'column', 'row']}
+          spacing={8}
+          p={2}
+          bg="blue.100"
+        >
+          <HStack>
+            <Text fontWeight="bold">Mocks:</Text>
+            <Switch
+              onChange={() => setWorkerEnabled(prev => !prev)}
+              isChecked={workerEnabled}
+              size="lg"
+            />
+          </HStack>
+          <HStack>
+            <Text fontWeight="bold">Mode:</Text>
+            <Select
+              value={mode}
+              onChange={({ target: { value } }) => setMode(value as WorkerMode)}
+              w="150px"
+              bg="white"
             >
-              <HStack>
-                <Text fontWeight="bold">Mocks:</Text>
-                <Switch
-                  onChange={() => setWorkerEnabled(prev => !prev)}
-                  isChecked={workerEnabled}
-                  size="lg"
-                />
-              </HStack>
-              <HStack>
-                <Text fontWeight="bold">Mode:</Text>
-                <Select
-                  value={mode}
-                  onChange={({ target: { value } }) =>
-                    setMode(value as WorkerMode)
-                  }
-                  w="150px"
-                  bg="white"
-                >
-                  {modes.map(m => (
-                    <option value={m} key={m}>
-                      {capitalize(m)}
-                    </option>
-                  ))}
-                </Select>
-              </HStack>
-              <HStack>
-                <Text fontWeight="bold">Delay (ms):</Text>
-                <NumberInput
-                  onChange={value => setDelay(Number(value))}
-                  value={delay}
-                  bg="white"
-                  w="100px"
-                >
-                  <NumberInputField />
-                </NumberInput>
-              </HStack>
+              {modes.map(m => (
+                <option value={m} key={m}>
+                  {capitalize(m)}
+                </option>
+              ))}
+            </Select>
+          </HStack>
+          <HStack>
+            <Text fontWeight="bold">Delay (ms):</Text>
+            <NumberInput
+              onChange={value => setDelay(Number(value))}
+              value={delay}
+              bg="white"
+              w="100px"
+            >
+              <NumberInputField />
+            </NumberInput>
+          </HStack>
 
-              <Spacer />
-              {actions ? actions : null}
-            </Stack>
-          </ChakraProvider>
-
-          <>{children}</>
-        </>
-      )}
+          <Spacer />
+          {actions ? actions : null}
+        </Stack>
+      </ChakraProvider>
+      {children}
     </>
-  );
+  ) : null;
 };
