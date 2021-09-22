@@ -1,4 +1,5 @@
+
 {
-    "sandboxes": ["new", "./example"]
+    "node": "12",
+    "sandboxes": ["msw-toolbar-template-45yr4"]
   }
-  
