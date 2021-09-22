@@ -154,10 +154,10 @@ export const MSWToolbar = ({
   if (!isEnabled || !worker) return <>{children}</>;
 
   return (
-    <ChakraProvider>
-      <div>
-        {isReady && (
-          <div>
+    <>
+      {isReady && (
+        <>
+          <ChakraProvider>
             <Stack
               direction={['column', 'column', 'row']}
               spacing={8}
@@ -204,10 +204,11 @@ export const MSWToolbar = ({
               <Spacer />
               {actions ? actions : null}
             </Stack>
-            <div>{children}</div>
-          </div>
-        )}
-      </div>
-    </ChakraProvider>
+          </ChakraProvider>
+
+          <>{children}</>
+        </>
+      )}
+    </>
   );
 };
