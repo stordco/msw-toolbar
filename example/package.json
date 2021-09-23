@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "start": "yarn copy-worker && parcel index.html",
+    "build": "yarn copy-worker && parcel build index.html",
+    "copy-worker": "copyfiles mockServiceWorker.js ./dist"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
+    "copyfiles": "^2.4.1",
     "msw": "^0.35.0",
     "parcel": "^1.12.3",
     "prettier": "^2.4.1",

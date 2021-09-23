@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { MSWToolbar } from '../.';
 import { Button, ChakraProvider, HStack } from '@chakra-ui/react';
 import type { SetupWorkerApi } from 'msw';
+import { APP_NAME } from './constants';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -32,6 +33,7 @@ const App = () => {
               <Button onClick={() => alert('Yadiddit')}>Another</Button>
             </HStack>
           }
+          prefix={APP_NAME}
         >
           <Button
             onClick={() =>

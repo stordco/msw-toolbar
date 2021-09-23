@@ -7,10 +7,16 @@ import {
   RestContext,
 } from 'msw';
 import { usePrevious } from './hooks';
-import { capitalize } from './utils';
 import styles from './styles.module.css';
+import { WorkerMode } from '../types';
+import { get, modes, set } from '../helpers';
 
 interface Props {
+  /**
+   * A prefix will be prepended to the localStorage key we use for persisting settings. If you use this component
+   * on many applications locally, you'll want to set this so configuration from app A doesn't impact app B.
+   */
+  prefix?: string;
   /**
    * The base url of your requests. This is required to use 'error' mode as it takes the base domain and intercepts any request regardless of the path.
    */
@@ -49,6 +55,7 @@ export const MSWToolbar = ({
   apiUrl = '',
   actions,
   worker,
+  prefix = '',
 }: Props) => {
   if ((isEnabled && !worker) || (isEnabled && worker && !worker.start)) {
     console.warn(
@@ -60,14 +67,11 @@ export const MSWToolbar = ({
 
   const [isReady, setIsReady] = React.useState(isEnabled ? false : true);
 
-  type WorkerMode = 'normal' | 'error';
-  const modes: WorkerMode[] = ['normal', 'error'];
-
   const [mode, setMode] = React.useState<WorkerMode>(
-    (localStorage.getItem('mswWorkerMode') as WorkerMode) ?? 'normal'
+    get(prefix, 'mode', 'normal')
   );
 
-  const lastWorkerStateFromStorage = localStorage.getItem('mswWorkerStatus');
+  const lastWorkerStateFromStorage = get(prefix, 'status', 'disabled');
 
   const [workerEnabled, setWorkerEnabled] = React.useState(
     lastWorkerStateFromStorage === 'enabled'
@@ -78,9 +82,7 @@ export const MSWToolbar = ({
     previousWorkerEnabled !== undefined &&
     workerEnabled !== previousWorkerEnabled;
 
-  const [delay, setDelay] = React.useState(
-    localStorage?.getItem('mswDelay') ?? 75
-  );
+  const [delay, setDelay] = React.useState(get(prefix, 'delay', '75'));
 
   React.useEffect(() => {
     if (!worker || !isEnabled || workerRef.current) return;
@@ -102,15 +104,12 @@ export const MSWToolbar = ({
 
       workerRef.current[action]();
 
-      localStorage.setItem(
-        'mswWorkerStatus',
-        workerEnabled ? 'enabled' : 'disabled'
-      );
+      set(prefix, 'status', workerEnabled ? 'enabled' : 'disabled');
     }
-  }, [workerEnabled, hasChangedWorkerState]);
+  }, [workerEnabled, hasChangedWorkerState, prefix]);
 
   React.useEffect(() => {
-    localStorage.setItem('mswWorkerMode', mode);
+    set(prefix, 'mode', mode);
 
     switch (mode) {
       case 'normal':
@@ -135,11 +134,11 @@ export const MSWToolbar = ({
       default:
         return;
     }
-  }, [mode, isReady, apiUrl]);
+  }, [mode, isReady, apiUrl, prefix]);
 
   React.useEffect(() => {
-    localStorage?.setItem('mswDelay', String(delay));
-  }, [delay]);
+    set(prefix, 'delay', String(delay));
+  }, [delay, prefix]);
 
   if (!isEnabled || !worker) return <>{children}</>;
 
@@ -179,7 +178,7 @@ export const MSWToolbar = ({
               >
                 {modes.map(m => (
                   <option value={m} key={m}>
-                    {capitalize(m)}
+                    {m}
                   </option>
                 ))}
               </select>
@@ -189,7 +188,7 @@ export const MSWToolbar = ({
               <input
                 id="delay"
                 type="number"
-                onChange={value => setDelay(Number(value))}
+                onChange={event => setDelay(event.target.value)}
                 value={delay}
               />
             </div>
