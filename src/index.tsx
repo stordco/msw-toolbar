@@ -6,19 +6,9 @@ import {
   ResponseComposition,
   RestContext,
 } from 'msw';
-import {
-  HStack,
-  Spacer,
-  Text,
-  Switch,
-  Select,
-  Stack,
-  NumberInput,
-  NumberInputField,
-  ChakraProvider,
-  usePrevious,
-} from '@chakra-ui/react';
+import { usePrevious } from './hooks';
 import { capitalize } from './utils';
+import styles from './styles.module.css';
 
 interface Props {
   /**
@@ -155,52 +145,60 @@ export const MSWToolbar = ({
 
   return isReady ? (
     <>
-      <ChakraProvider>
-        <Stack
-          direction={['column', 'column', 'row']}
-          spacing={8}
-          p={2}
-          bg="blue.100"
-        >
-          <HStack>
-            <Text fontWeight="bold">Mocks:</Text>
-            <Switch
-              onChange={() => setWorkerEnabled(prev => !prev)}
-              isChecked={workerEnabled}
-              size="lg"
-            />
-          </HStack>
-          <HStack>
-            <Text fontWeight="bold">Mode:</Text>
-            <Select
-              value={mode}
-              onChange={({ target: { value } }) => setMode(value as WorkerMode)}
-              w="150px"
-              bg="white"
-            >
-              {modes.map(m => (
-                <option value={m} key={m}>
-                  {capitalize(m)}
-                </option>
-              ))}
-            </Select>
-          </HStack>
-          <HStack>
-            <Text fontWeight="bold">Delay (ms):</Text>
-            <NumberInput
-              onChange={value => setDelay(Number(value))}
-              value={delay}
-              bg="white"
-              w="100px"
-            >
-              <NumberInputField />
-            </NumberInput>
-          </HStack>
+      <>
+        <div className={styles.container}>
+          <div className={styles['left-actions']}>
+            <div className={styles['input-wrapper']}>
+              <label>Mocks:</label>
 
-          <Spacer />
+              <div className={styles.onoffswitch}>
+                <input
+                  type="checkbox"
+                  name="onoffswitch"
+                  className={styles['onoffswitch-checkbox']}
+                  id="myonoffswitch"
+                  tabIndex={0}
+                  onChange={() => setWorkerEnabled(prev => !prev)}
+                  checked={workerEnabled}
+                />
+                <label
+                  className={styles['onoffswitch-label']}
+                  htmlFor="myonoffswitch"
+                ></label>
+              </div>
+            </div>
+            <div className={styles['input-wrapper']}>
+              <label htmlFor="mode">Mode:</label>
+              <select
+                id="mode"
+                value={mode}
+                onChange={({ target: { value } }) =>
+                  setMode(value as WorkerMode)
+                }
+                style={{ width: 150, backgroundColor: 'white' }}
+              >
+                {modes.map(m => (
+                  <option value={m} key={m}>
+                    {capitalize(m)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles['input-wrapper']}>
+              <label htmlFor="delay">Delay (ms):</label>
+              <input
+                id="delay"
+                type="number"
+                onChange={value => setDelay(Number(value))}
+                value={delay}
+              />
+            </div>
+          </div>
+
+          <div className={styles.spacer} />
           {actions ? actions : null}
-        </Stack>
-      </ChakraProvider>
+        </div>
+      </>
       {children}
     </>
   ) : null;

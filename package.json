@@ -27,10 +27,6 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "@chakra-ui/react": "^1.6.8",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
-    "framer-motion": "^4",
     "msw": "^0.35.0",
     "react": ">=16"
   },
@@ -57,17 +53,14 @@
     }
   ],
   "devDependencies": {
-    "@chakra-ui/react": "^1.6.8",
-    "@emotion/react": "11",
-    "@emotion/styled": "11",
     "@size-limit/preset-small-lib": "^5.0.4",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
-    "framer-motion": "4",
     "husky": "^7.0.0",
     "msw": "^0.35.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "rollup-plugin-postcss": "^4.0.1",
     "size-limit": "^5.0.4",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
