@@ -1,4 +1,5 @@
 import { MSWToolbar } from './component/MSWToolbar';
-import { json, notFound, getDelay } from './utils';
+import { createUtils } from './utils';
 
-export { MSWToolbar, json, notFound, getDelay };
+export { MSWToolbar, createUtils };
+export * from './types';
