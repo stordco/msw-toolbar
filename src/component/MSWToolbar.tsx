@@ -7,7 +7,6 @@ import {
   RestContext,
 } from 'msw';
 import { usePrevious } from './hooks';
-import { capitalize } from './utils';
 import styles from './styles.module.css';
 
 interface Props {
@@ -179,7 +178,7 @@ export const MSWToolbar = ({
               >
                 {modes.map(m => (
                   <option value={m} key={m}>
-                    {capitalize(m)}
+                    {m}
                   </option>
                 ))}
               </select>
@@ -189,7 +188,7 @@ export const MSWToolbar = ({
               <input
                 id="delay"
                 type="number"
-                onChange={value => setDelay(Number(value))}
+                onChange={event => setDelay(event.target.valueAsNumber)}
                 value={delay}
               />
             </div>
