@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { rest } from 'msw';
+import { RequestHandler, rest } from 'msw';
 import {
   SetupWorkerApi,
   MockedRequest,
@@ -10,7 +10,35 @@ import { usePrevious } from './hooks';
 import styles from './styles.module.css';
 import { WorkerMode } from '../types';
 import { get, modes, set } from '../helpers';
-import { MSWToolbarProps } from '..';
+import { MSWToolbarProps, TrackedRequest } from '..';
+
+async function buildHandlersFromRecordedRequests(
+  trackedRequests: TrackedRequest
+): Promise<RequestHandler[]> {
+  let handlers = [];
+  for (const [, { request, response }] of trackedRequests.entries()) {
+    if (!response) continue;
+
+    // TODO: this should probably happen before we add it to the map,
+    // and we'd most likely want to set the response type there (text, json)
+    // along with the data
+    const data = await response.json();
+
+    const handler = (rest as any)[request.method.toLocaleLowerCase()](
+      request.url.href,
+      (
+        _req: MockedRequest<any>,
+        res: ResponseComposition<any>,
+        ctx: RestContext
+      ) => {
+        return res(ctx.json(data));
+      }
+    );
+    handlers.push(handler);
+  }
+
+  return handlers;
+}
 
 /**
  * This is a simple toolbar that allows you to toggle MSW handlers in local development as well as easily invalidate all of the caches.
@@ -35,6 +63,7 @@ export const MSWToolbar = ({
   }
 
   const workerRef = React.useRef<SetupWorkerApi>();
+  const trackedRequestsRef = React.useRef<TrackedRequest>(new Map());
 
   const [isReady, setIsReady] = React.useState(isEnabled ? false : true);
 
@@ -83,7 +112,39 @@ export const MSWToolbar = ({
     set(prefix, 'mode', mode);
 
     switch (mode) {
+      case 'record':
+        // Passing empty handlers will cause everything to run as a bypass
+        workerRef.current?.use(...[]);
+        workerRef.current?.events.on('request:start', request => {
+          trackedRequestsRef.current.set(request.id, {
+            request,
+            response: null as any,
+          });
+        });
+
+        workerRef.current?.events.on('response:bypass', async (res, reqId) => {
+          const clone = res.clone();
+          const existingRequestEntry = trackedRequestsRef.current.get(reqId);
+          if (existingRequestEntry) {
+            trackedRequestsRef.current.set(reqId, {
+              ...existingRequestEntry,
+              response: clone,
+            });
+          }
+        });
+
+        return;
+      case 'replay':
+        workerRef.current?.events.removeAllListeners();
+        buildHandlersFromRecordedRequests(trackedRequestsRef.current).then(
+          handlers => {
+            workerRef.current?.resetHandlers(...handlers);
+          }
+        );
+
+        return;
       case 'normal':
+        workerRef.current?.events.removeAllListeners();
         workerRef.current?.resetHandlers();
         return;
       case 'error':
