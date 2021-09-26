@@ -1,44 +1,11 @@
 import * as React from 'react';
-import { RequestHandler, rest } from 'msw';
-import {
-  SetupWorkerApi,
-  MockedRequest,
-  ResponseComposition,
-  RestContext,
-} from 'msw';
+import { rest } from 'msw';
+import { SetupWorkerApi } from 'msw';
 import { usePrevious } from './hooks';
 import styles from './styles.module.css';
 import { WorkerMode } from '../types';
-import { get, modes, set } from '../helpers';
+import { buildHandlersForTrackedRequests, get, modes, set } from '../helpers';
 import { MSWToolbarProps, TrackedRequest } from '..';
-
-async function buildHandlersFromRecordedRequests(
-  trackedRequests: TrackedRequest
-): Promise<RequestHandler[]> {
-  let handlers = [];
-  for (const [, { request, response }] of trackedRequests.entries()) {
-    if (!response) continue;
-
-    // TODO: this should probably happen before we add it to the map,
-    // and we'd most likely want to set the response type there (text, json)
-    // along with the data
-    const data = await response.json();
-
-    const handler = (rest as any)[request.method.toLocaleLowerCase()](
-      request.url.href,
-      (
-        _req: MockedRequest<any>,
-        res: ResponseComposition<any>,
-        ctx: RestContext
-      ) => {
-        return res(ctx.json(data));
-      }
-    );
-    handlers.push(handler);
-  }
-
-  return handlers;
-}
 
 /**
  * This is a simple toolbar that allows you to toggle MSW handlers in local development as well as easily invalidate all of the caches.
@@ -117,18 +84,19 @@ export const MSWToolbar = ({
         workerRef.current?.use(...[]);
         workerRef.current?.events.on('request:start', request => {
           trackedRequestsRef.current.set(request.id, {
+            time: Number(new Date()),
             request,
-            response: null as any,
+            response: null,
           });
         });
 
         workerRef.current?.events.on('response:bypass', async (res, reqId) => {
-          const clone = res.clone();
           const existingRequestEntry = trackedRequestsRef.current.get(reqId);
           if (existingRequestEntry) {
             trackedRequestsRef.current.set(reqId, {
               ...existingRequestEntry,
-              response: clone,
+              time: existingRequestEntry.time - Number(new Date()),
+              response: res.clone(),
             });
           }
         });
@@ -136,7 +104,7 @@ export const MSWToolbar = ({
         return;
       case 'replay':
         workerRef.current?.events.removeAllListeners();
-        buildHandlersFromRecordedRequests(trackedRequestsRef.current).then(
+        buildHandlersForTrackedRequests(trackedRequestsRef.current).then(
           handlers => {
             workerRef.current?.resetHandlers(...handlers);
           }
@@ -149,17 +117,12 @@ export const MSWToolbar = ({
         return;
       case 'error':
         workerRef.current?.use(
-          ...['get', 'post', 'put', 'patch', 'delete'].map(method =>
-            (rest as any)[method as any](
-              `${apiUrl}/*`,
-              (
-                _req: MockedRequest<any>,
-                res: ResponseComposition<any>,
-                _ctx: RestContext
-              ) => {
-                return res.networkError('Fake error');
-              }
-            )
+          ...(['get', 'post', 'put', 'patch', 'delete'] as Array<
+            keyof typeof rest
+          >).map(method =>
+            rest[method](`${apiUrl}/*`, (_req, res, _ctx) => {
+              return res.networkError('Fake error');
+            })
           )
         );
         return;

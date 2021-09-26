@@ -1312,6 +1312,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/har-format@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@types/har-format/-/har-format-1.2.7.tgz#debfe36378f26c4fc2abca1df99f00a8ff94fd29"
+  integrity sha512-/TPzUG0tJn5x1TUcVLlDx2LqbE58hyOzDVAc9kf8SpOEmguHjU6bKUyfqb211AdqLOmU/SNyXvLKPNP5qTlfRw==
+
 "@types/inquirer@^7.3.3":
   version "7.3.3"
   resolved "https://registry.yarnpkg.com/@types/inquirer/-/inquirer-7.3.3.tgz#92e6676efb67fa6925c69a2ee638f67a822952ac"
@@ -7486,7 +7491,7 @@ set-blocking@^2.0.0:
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
   integrity sha1-BF+XgtARrppoA93TgrJDkrPYkPc=
 
-set-cookie-parser@^2.4.6:
+set-cookie-parser@^2.4.6, set-cookie-parser@^2.4.8:
   version "2.4.8"
   resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.4.8.tgz#d0da0ed388bc8f24e706a391f9c9e252a13c58b2"
   integrity sha512-edRH8mBKEWNVIVMKejNnuJxleqYE/ZSdcT8/Nem9/mmosx12pctd80s2Oy00KNZzrogMZS5mauK2/ymL1bvlvg==

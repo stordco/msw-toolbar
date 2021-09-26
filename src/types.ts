@@ -38,5 +38,6 @@ export type TrackedRequest = Map<
   {
     request: MockedRequest;
     response: Response | null;
+    time: number;
   }
 >;

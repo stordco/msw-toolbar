@@ -36,7 +36,7 @@ const App = () => {
           prefix={APP_NAME}
         >
           <Button
-            onClick={() =>
+            onClick={() => {
               fetch('https://pokeapi.co/api/v2/pokemon/ditto').then(
                 async (res) => {
                   if (res.ok) {
@@ -46,8 +46,8 @@ const App = () => {
                     );
                   }
                 }
-              )
-            }
+              );
+            }}
             mt={50}
           >
             Make a request
