@@ -1,5 +1,5 @@
 import { MSWToolbar } from './component/MSWToolbar';
-import { createUtils } from './utils';
+import { createUtils, set, get } from './utils';
 
-export { MSWToolbar, createUtils };
+export { MSWToolbar, createUtils, set, get };
 export * from './types';
