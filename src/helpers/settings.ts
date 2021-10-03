@@ -1,7 +1,7 @@
 import { Setting } from '..';
 import { WorkerMode, WorkerStatus } from '../types';
 
-export const modes: WorkerMode[] = ['normal', 'error'];
+export const modes: WorkerMode[] = ['normal', 'error', 'record', 'replay'];
 
 type SettingValueMap = {
   mode: WorkerMode;

@@ -1,4 +1,4 @@
-import { SetupWorkerApi } from 'msw';
+import { MockedRequest, SetupWorkerApi } from 'msw';
 
 export interface MSWToolbarProps {
   /**
@@ -32,4 +32,12 @@ export interface MSWToolbarProps {
 
 export type Setting = 'mode' | 'delay' | 'status';
 export type WorkerStatus = 'enabled' | 'disabled';
-export type WorkerMode = 'normal' | 'error';
+export type WorkerMode = 'normal' | 'error' | 'record' | 'replay';
+export type TrackedRequest = Map<
+  string,
+  {
+    request: MockedRequest;
+    response: Response | null;
+    time: number;
+  }
+>;

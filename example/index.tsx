@@ -25,7 +25,7 @@ const App = () => {
       <ChakraProvider>
         <MSWToolbar
           worker={worker}
-          apiUrl="http://www.example.com"
+          apiUrl="https://pokeapi.co"
           isEnabled={true}
           actions={
             <HStack spacing={2}>
@@ -36,16 +36,18 @@ const App = () => {
           prefix={APP_NAME}
         >
           <Button
-            onClick={() =>
-              fetch('http://www.example.com').then(async (res) => {
-                if (res.ok) {
-                  const content = await res.json();
-                  alert(
-                    `Here is the mocked response!: ${JSON.stringify(content)}`
-                  );
+            onClick={() => {
+              fetch('https://pokeapi.co/api/v2/pokemon/ditto').then(
+                async (res) => {
+                  if (res.ok) {
+                    const content = await res.json();
+                    alert(
+                      `Here is the mocked response!: ${JSON.stringify(content)}`
+                    );
+                  }
                 }
-              })
-            }
+              );
+            }}
             mt={50}
           >
             Make a request

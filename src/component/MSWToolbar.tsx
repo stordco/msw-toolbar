@@ -1,16 +1,11 @@
 import * as React from 'react';
 import { rest } from 'msw';
-import {
-  SetupWorkerApi,
-  MockedRequest,
-  ResponseComposition,
-  RestContext,
-} from 'msw';
+import { SetupWorkerApi } from 'msw';
 import { usePrevious } from './hooks';
 import styles from './styles.module.css';
 import { WorkerMode } from '../types';
-import { get, modes, set } from '../helpers';
-import { MSWToolbarProps } from '..';
+import { buildHandlersForTrackedRequests, get, modes, set } from '../helpers';
+import { MSWToolbarProps, TrackedRequest } from '..';
 
 /**
  * This is a simple toolbar that allows you to toggle MSW handlers in local development as well as easily invalidate all of the caches.
@@ -35,6 +30,7 @@ export const MSWToolbar = ({
   }
 
   const workerRef = React.useRef<SetupWorkerApi>();
+  const trackedRequestsRef = React.useRef<TrackedRequest>(new Map());
 
   const [isReady, setIsReady] = React.useState(isEnabled ? false : true);
 
@@ -83,22 +79,50 @@ export const MSWToolbar = ({
     set(prefix, 'mode', mode);
 
     switch (mode) {
+      case 'record':
+        // Passing empty handlers will cause everything to run as a bypass
+        workerRef.current?.use(...[]);
+        workerRef.current?.events.on('request:start', request => {
+          trackedRequestsRef.current.set(request.id, {
+            time: Number(new Date()),
+            request,
+            response: null,
+          });
+        });
+
+        workerRef.current?.events.on('response:bypass', async (res, reqId) => {
+          const existingRequestEntry = trackedRequestsRef.current.get(reqId);
+          if (existingRequestEntry) {
+            trackedRequestsRef.current.set(reqId, {
+              ...existingRequestEntry,
+              time: existingRequestEntry.time - Number(new Date()),
+              response: res.clone(),
+            });
+          }
+        });
+
+        return;
+      case 'replay':
+        workerRef.current?.events.removeAllListeners();
+        buildHandlersForTrackedRequests(trackedRequestsRef.current).then(
+          handlers => {
+            workerRef.current?.resetHandlers(...handlers);
+          }
+        );
+
+        return;
       case 'normal':
+        workerRef.current?.events.removeAllListeners();
         workerRef.current?.resetHandlers();
         return;
       case 'error':
         workerRef.current?.use(
-          ...['get', 'post', 'put', 'patch', 'delete'].map(method =>
-            (rest as any)[method as any](
-              `${apiUrl}/*`,
-              (
-                _req: MockedRequest<any>,
-                res: ResponseComposition<any>,
-                _ctx: RestContext
-              ) => {
-                return res.networkError('Fake error');
-              }
-            )
+          ...(['get', 'post', 'put', 'patch', 'delete'] as Array<
+            keyof typeof rest
+          >).map(method =>
+            rest[method](`${apiUrl}/*`, (_req, res, _ctx) => {
+              return res.networkError('Fake error');
+            })
           )
         );
         return;
