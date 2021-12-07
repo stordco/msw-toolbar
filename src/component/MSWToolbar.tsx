@@ -116,59 +116,63 @@ export const MSWToolbar = ({
   return isReady ? (
     <>
       <>
-        <div className={styles.container}>
-          <div className={styles['left-actions']}>
-            <div className={styles['input-wrapper']}>
-              <label>Mocks:</label>
+        <div className={styles['msw-toolbar']}>
+          <label
+            className={`${styles.toggle} ${styles['input-wrapper']}`}
+            htmlFor="msw-toolbar-mocks-toggle"
+          >
+            <span className={styles.label}>Mocks:</span>
 
-              <div className={styles.onoffswitch}>
-                <input
-                  type="checkbox"
-                  name="onoffswitch"
-                  className={styles['onoffswitch-checkbox']}
-                  id="myonoffswitch"
-                  tabIndex={0}
-                  onChange={() => setWorkerEnabled(prev => !prev)}
-                  checked={workerEnabled}
-                />
-                <label
-                  className={styles['onoffswitch-label']}
-                  htmlFor="myonoffswitch"
-                ></label>
-              </div>
-            </div>
-            <div className={styles['input-wrapper']}>
-              <label htmlFor="mode">Mode:</label>
-              <select
-                id="mode"
-                value={mode}
-                onChange={({ target: { value } }) =>
-                  setMode(value as WorkerMode)
-                }
-                style={{ width: 150, backgroundColor: 'white' }}
-              >
-                {modes.map(m => (
-                  <option value={m} key={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={styles['input-wrapper']}>
-              <label htmlFor="delay">Delay (ms):</label>
+            <div data-toggle-checkbox-container>
               <input
-                id="delay"
-                type="number"
-                onChange={event => setDelay(event.target.value)}
-                value={delay}
+                id="msw-toolbar-mocks-toggle"
+                type="checkbox"
+                tabIndex={0}
+                onChange={() => setWorkerEnabled(prev => !prev)}
+                checked={workerEnabled}
               />
+              <div data-toggle-track></div>
+              <div data-toggle-handle></div>
             </div>
+          </label>
+
+          <div className={styles['input-wrapper']}>
+            <label className={styles.label} htmlFor="msw-toolbar-mode">
+              Mode:
+            </label>
+
+            <select
+              id="msw-toolbar-mode"
+              value={mode}
+              onChange={event => setMode(event.target.value as WorkerMode)}
+            >
+              {modes.map(m => (
+                <option value={m} key={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles['input-wrapper']}>
+            <label className={styles.label} htmlFor="msw-toolbar-delay">
+              Delay (ms):
+            </label>
+
+            <input
+              id="msw-toolbar-delay"
+              type="number"
+              onChange={event => setDelay(event.target.value)}
+              value={delay}
+            />
           </div>
 
           <div className={styles.spacer} />
+
           {actions ? actions : null}
         </div>
       </>
+
       {children}
     </>
   ) : null;

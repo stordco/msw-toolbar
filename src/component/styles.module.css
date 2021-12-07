@@ -1,78 +1,48 @@
-.onoffswitch {
-  position: relative;
-  width: 65px;
-  user-select: none;
+.msw-toolbar {
+  @apply flex p-2 bg-blue-100;
 }
-.onoffswitch-checkbox {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+
+.toggle {
+  @apply relative select-none;
 }
-.onoffswitch-label {
-  display: block;
-  overflow: hidden;
-  cursor: pointer;
-  height: 25px;
-  padding: 0;
-  line-height: 25px;
-  border: 2px solid #e3e3e3;
-  border-radius: 25px;
-  background-color: #ffffff;
-  transition: background-color 0.3s ease-in;
+
+.toggle [data-toggle-checkbox-container] {
+  @apply relative cursor-pointer;
 }
-.onoffswitch-label:before {
-  content: '';
-  display: block;
-  width: 25px;
-  margin: 0px;
-  background: #ffffff;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 38px;
-  border: 2px solid #e3e3e3;
-  border-radius: 25px;
-  transition: all 0.3s ease-in 0s;
+
+.toggle input[type='checkbox'] {
+  @apply absolute opacity-0 pointer-events-none sr-only;
 }
-.onoffswitch-checkbox:checked + .onoffswitch-label {
+
+.toggle input[type='checkbox']:checked ~ [data-toggle-handle] {
+  transform: translateX(100%);
   background-color: #557fdb;
 }
-.onoffswitch-checkbox:checked + .onoffswitch-label,
-.onoffswitch-checkbox:checked + .onoffswitch-label:before {
-  border-color: #557fdb;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label:before {
-  right: 0px;
+
+.toggle [data-toggle-track] {
+  @apply w-10 h-4 bg-gray-400 rounded-full shadow-inner;
 }
 
-.container {
-  display: flex;
-  flex-direction: row;
-  padding: 5px;
-  background-color: #e8efff;
-}
-
-.left-actions {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 600px;
-  align-items: center;
-}
-
-.input-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.input-wrapper label {
-  font-weight: bold;
-  margin-right: 5px;
+.toggle [data-toggle-handle] {
+  @apply absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition;
 }
 
 .spacer {
-  flex: 1;
-  justify-self: stretch;
-  align-self: stretch;
+  @apply m-auto;
+}
+
+.input-wrapper {
+  @apply flex items-center mr-4;
+}
+
+.input-wrapper select {
+  @apply form-input form-select;
+}
+
+.input-wrapper input {
+  @apply form-input;
+}
+
+.label {
+  @apply font-bold mr-1;
 }
