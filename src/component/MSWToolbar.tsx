@@ -27,6 +27,8 @@ export const MSWToolbar = ({
   actions,
   worker,
   prefix = '',
+  className,
+  ...props
 }: MSWToolbarProps) => {
   if ((isEnabled && !worker) || (isEnabled && worker && !worker.start)) {
     console.warn(
@@ -111,12 +113,23 @@ export const MSWToolbar = ({
     set(prefix, 'delay', String(delay));
   }, [delay, prefix]);
 
+  const [isHidden, setIsHidden] = React.useState(false);
+
   if (!isEnabled || !worker) return <>{children}</>;
 
-  return isReady ? (
+  if (!isReady) {
+    return null;
+  }
+
+  return (
     <>
-      <>
-        <div className={styles['msw-toolbar']}>
+      <div className={styles['container']} data-hidden={isHidden}>
+        <div
+          className={[className, styles['msw-toolbar']]
+            .filter(Boolean)
+            .join(' ')}
+          {...props}
+        >
           <label
             className={`${styles.toggle} ${styles['input-wrapper']}`}
             htmlFor="msw-toolbar-mocks-toggle"
@@ -131,8 +144,8 @@ export const MSWToolbar = ({
                 onChange={() => setWorkerEnabled(prev => !prev)}
                 checked={workerEnabled}
               />
-              <div data-toggle-track></div>
-              <div data-toggle-handle></div>
+              <div data-toggle-track />
+              <div data-toggle-handle />
             </div>
           </label>
 
@@ -169,11 +182,48 @@ export const MSWToolbar = ({
 
           <div className={styles.spacer} />
 
-          {actions ? actions : null}
+          {actions ? <div>{actions}</div> : null}
         </div>
-      </>
+
+        <button
+          className={styles['hide-show-handle']}
+          onClick={() => setIsHidden(isHidden => !isHidden)}
+        >
+          {isHidden ? (
+            <svg
+              className={styles.icon}
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 13l-7 7-7-7m14-8l-7 7-7-7"
+              />
+            </svg>
+          ) : (
+            <svg
+              className={styles.icon}
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 11l7-7 7 7M5 19l7-7 7 7"
+              />
+            </svg>
+          )}
+        </button>
+      </div>
 
       {children}
     </>
-  ) : null;
+  );
 };

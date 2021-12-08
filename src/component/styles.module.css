@@ -1,5 +1,25 @@
+.container {
+  @apply absolute top-0 inset-x-0 z-50 transition;
+}
+
+.container[data-hidden='true'] {
+  transform: translateY(-100%);
+}
+
 .msw-toolbar {
   @apply flex p-2 bg-blue-100;
+}
+
+.hide-show-handle {
+  @apply absolute top-full right-1/4 p-4 bg-blue-100 rounded-b-lg transition;
+}
+
+.container[data-hidden='true'] .hide-show-handle:not(:hover) {
+  @apply opacity-50;
+}
+
+.icon {
+  @apply w-6 h-6;
 }
 
 .toggle {
@@ -7,7 +27,7 @@
 }
 
 .toggle [data-toggle-checkbox-container] {
-  @apply relative cursor-pointer;
+  @apply relative cursor-pointer m-1;
 }
 
 .toggle input[type='checkbox'] {
@@ -15,8 +35,16 @@
 }
 
 .toggle input[type='checkbox']:checked ~ [data-toggle-handle] {
+  @apply bg-blue-500;
   transform: translateX(100%);
-  background-color: #557fdb;
+}
+
+.toggle input[type='checkbox']:hover:not(:checked) ~ [data-toggle-handle] {
+  @apply bg-blue-200;
+}
+
+.toggle input[type='checkbox']:focus-visible ~ [data-toggle-handle] {
+  @apply border-2 border-blue-500;
 }
 
 .toggle [data-toggle-track] {
