@@ -1,29 +1,41 @@
-.container {
-  @apply absolute top-0 inset-x-0 z-50 transition;
+.btn {
+  @apply cursor-pointer normal-case border-none bg-transparent text-sm font-bold;
 }
 
-.container[data-hidden='true'] {
-  transform: translateY(calc(-100% + 5px));
+.close-button {
+  @apply px-2 py-1 rounded bg-gray-200 hover:bg-gray-300;
+}
+
+.show-toolbar-button {
+  @apply fixed bottom-0 left-0 m-2 opacity-50 hover:opacity-100 transition;
 }
 
 .msw-toolbar {
-  @apply flex p-2 bg-blue-100 overflow-hidden;
+  @apply fixed inset-x-0 z-50 flex p-2 bg-gray-100 overflow-hidden transition;
+}
+
+.msw-toolbar[data-position='top'] {
+  @apply top-0;
+}
+
+.msw-toolbar[data-position='bottom'] {
+  @apply bottom-0;
+}
+
+.msw-toolbar[data-position='top'][data-hidden='true'] {
+  transform: translateY(-100%);
+}
+
+.msw-toolbar[data-position='bottom'][data-hidden='true'] {
+  transform: translateY(100%);
 }
 
 .controls {
   @apply flex flex-wrap items-center gap-4 mr-4;
 }
 
-.hide-show-handle {
-  @apply absolute top-full right-1/4 p-4 bg-blue-100 rounded-b-lg cursor-pointer transition normal-case border-none;
-}
-
 .container[data-hidden='true']:not(:hover) {
   @apply opacity-50;
-}
-
-.icon {
-  @apply w-6 h-6;
 }
 
 .toggle {

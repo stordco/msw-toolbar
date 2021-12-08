@@ -12,6 +12,8 @@ import { WorkerMode } from '../types';
 import { get, modes, set } from '../helpers';
 import { MSWToolbarProps } from '..';
 
+import MSWLogo from './msw-logo.svg';
+
 /**
  * This is a simple toolbar that allows you to toggle MSW handlers in local development as well as easily invalidate all of the caches.
  *
@@ -28,6 +30,7 @@ export const MSWToolbar = ({
   worker,
   prefix = '',
   className,
+  position = 'top',
   ...props
 }: MSWToolbarProps) => {
   if ((isEnabled && !worker) || (isEnabled && worker && !worker.start)) {
@@ -123,12 +126,32 @@ export const MSWToolbar = ({
 
   return (
     <>
+      <button
+        className={`${styles.btn} ${styles['show-toolbar-button']}`}
+        onClick={() => {
+          setIsHidden(false);
+        }}
+        hidden={!isHidden}
+      >
+        <MSWLogo width={64} />
+      </button>
+
       <div
-        className={[className, styles['container']].filter(Boolean).join(' ')}
+        className={[className, styles['msw-toolbar']].filter(Boolean).join(' ')}
         data-hidden={isHidden}
+        data-position={position}
         {...props}
       >
-        <div className={styles['msw-toolbar']}>
+        <div>
+          <button
+            className={`${styles.btn} ${styles['close-button']}`}
+            onClick={() => {
+              setIsHidden(true);
+            }}
+          >
+            Close
+          </button>
+
           <div className={styles.controls}>
             <label
               className={`${styles.toggle} ${styles['input-wrapper']}`}
@@ -180,48 +203,11 @@ export const MSWToolbar = ({
               />
             </div>
           </div>
-
-          <div className={styles.spacer} />
-
-          {actions ? <div>{actions}</div> : null}
         </div>
 
-        <button
-          className={styles['hide-show-handle']}
-          onClick={() => setIsHidden(isHidden => !isHidden)}
-        >
-          {isHidden ? (
-            <svg
-              className={styles.icon}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 13l-7 7-7-7m14-8l-7 7-7-7"
-              />
-            </svg>
-          ) : (
-            <svg
-              className={styles.icon}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 11l7-7 7 7M5 19l7-7 7 7"
-              />
-            </svg>
-          )}
-        </button>
+        <div className={styles.spacer} />
+
+        {actions ? <div>{actions}</div> : null}
       </div>
 
       {children}

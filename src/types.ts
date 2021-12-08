@@ -24,6 +24,12 @@ export interface MSWToolbarProps extends React.ComponentPropsWithoutRef<'div'> {
    * An instance of the MSW worker returned from `setupWorker`.
    */
   worker: SetupWorkerApi | undefined;
+
+  /**
+   * The position of the toolbar.
+   * @default 'top'
+   */
+  position?: 'top' | 'bottom';
 }
 
 export type Setting = 'mode' | 'delay' | 'status';
