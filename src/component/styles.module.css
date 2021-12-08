@@ -3,18 +3,22 @@
 }
 
 .container[data-hidden='true'] {
-  transform: translateY(-100%);
+  transform: translateY(calc(-100% + 5px));
 }
 
 .msw-toolbar {
-  @apply flex p-2 bg-blue-100;
+  @apply flex p-2 bg-blue-100 overflow-hidden;
+}
+
+.controls {
+  @apply flex flex-wrap items-center gap-4 mr-4;
 }
 
 .hide-show-handle {
   @apply absolute top-full right-1/4 p-4 bg-blue-100 rounded-b-lg cursor-pointer transition normal-case border-none;
 }
 
-.container[data-hidden='true'] .hide-show-handle:not(:hover) {
+.container[data-hidden='true']:not(:hover) {
   @apply opacity-50;
 }
 
@@ -60,7 +64,7 @@
 }
 
 .input-wrapper {
-  @apply flex items-center mr-4;
+  @apply flex items-center;
 }
 
 .input-wrapper select {
