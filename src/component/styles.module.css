@@ -11,7 +11,7 @@
 }
 
 .hide-show-handle {
-  @apply absolute top-full right-1/4 p-4 bg-blue-100 rounded-b-lg transition;
+  @apply absolute top-full right-1/4 p-4 bg-blue-100 rounded-b-lg cursor-pointer transition normal-case border-none;
 }
 
 .container[data-hidden='true'] .hide-show-handle:not(:hover) {
