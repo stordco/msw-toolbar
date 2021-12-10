@@ -93,7 +93,7 @@ export const MSWToolbar = ({
         return;
       case 'error':
         workerRef.current?.use(
-          ...['get', 'post', 'put', 'patch', 'delete'].map(method =>
+          ...['get', 'post', 'put', 'patch', 'delete'].map((method) =>
             (rest as any)[method as any](
               `${apiUrl}/*`,
               (
@@ -116,7 +116,9 @@ export const MSWToolbar = ({
     set(prefix, 'delay', String(delay));
   }, [delay, prefix]);
 
-  const [isHidden, setIsHidden] = React.useState(false);
+  const [isHidden, setIsHidden] = React.useState(
+    () => get(prefix, 'isHidden', 'true') === 'true'
+  );
 
   if (!isEnabled || !worker) return <>{children}</>;
 
@@ -130,6 +132,7 @@ export const MSWToolbar = ({
         className={`${styles.btn} ${styles['show-toolbar-button']}`}
         onClick={() => {
           setIsHidden(false);
+          set(prefix, 'isHidden', 'false');
         }}
         hidden={!isHidden}
       >
@@ -147,6 +150,7 @@ export const MSWToolbar = ({
             className={`${styles.btn} ${styles['close-button']}`}
             onClick={() => {
               setIsHidden(true);
+              set(prefix, 'isHidden', 'true');
             }}
           >
             Close
@@ -164,7 +168,7 @@ export const MSWToolbar = ({
                   id="msw-toolbar-mocks-toggle"
                   type="checkbox"
                   tabIndex={0}
-                  onChange={() => setWorkerEnabled(prev => !prev)}
+                  onChange={() => setWorkerEnabled((prev) => !prev)}
                   checked={workerEnabled}
                 />
                 <div data-toggle-track />
@@ -180,9 +184,9 @@ export const MSWToolbar = ({
               <select
                 id="msw-toolbar-mode"
                 value={mode}
-                onChange={event => setMode(event.target.value as WorkerMode)}
+                onChange={(event) => setMode(event.target.value as WorkerMode)}
               >
-                {modes.map(m => (
+                {modes.map((m) => (
                   <option value={m} key={m}>
                     {m}
                   </option>
@@ -198,7 +202,7 @@ export const MSWToolbar = ({
               <input
                 id="msw-toolbar-delay"
                 type="number"
-                onChange={event => setDelay(event.target.value)}
+                onChange={(event) => setDelay(event.target.value)}
                 value={delay}
               />
             </div>

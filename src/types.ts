@@ -38,6 +38,6 @@ export interface MSWToolbarProps extends React.ComponentPropsWithoutRef<'div'> {
   position?: 'top' | 'bottom';
 }
 
-export type Setting = 'mode' | 'delay' | 'status';
+export type Setting = 'mode' | 'delay' | 'status' | 'isHidden';
 export type WorkerStatus = 'enabled' | 'disabled';
 export type WorkerMode = 'normal' | 'error';
