@@ -93,7 +93,7 @@ export const MSWToolbar = ({
         return;
       case 'error':
         workerRef.current?.use(
-          ...['get', 'post', 'put', 'patch', 'delete'].map((method) =>
+          ...['get', 'post', 'put', 'patch', 'delete'].map(method =>
             (rest as any)[method as any](
               `${apiUrl}/*`,
               (
@@ -168,7 +168,7 @@ export const MSWToolbar = ({
                   id="msw-toolbar-mocks-toggle"
                   type="checkbox"
                   tabIndex={0}
-                  onChange={() => setWorkerEnabled((prev) => !prev)}
+                  onChange={() => setWorkerEnabled(prev => !prev)}
                   checked={workerEnabled}
                 />
                 <div data-toggle-track />
@@ -184,9 +184,9 @@ export const MSWToolbar = ({
               <select
                 id="msw-toolbar-mode"
                 value={mode}
-                onChange={(event) => setMode(event.target.value as WorkerMode)}
+                onChange={event => setMode(event.target.value as WorkerMode)}
               >
-                {modes.map((m) => (
+                {modes.map(m => (
                   <option value={m} key={m}>
                     {m}
                   </option>
@@ -202,7 +202,7 @@ export const MSWToolbar = ({
               <input
                 id="msw-toolbar-delay"
                 type="number"
-                onChange={(event) => setDelay(event.target.value)}
+                onChange={event => setDelay(event.target.value)}
                 value={delay}
               />
             </div>
