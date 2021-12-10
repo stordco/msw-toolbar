@@ -26,6 +26,12 @@ export interface MSWToolbarProps extends React.ComponentPropsWithoutRef<'div'> {
   worker: SetupWorkerApi | undefined;
 
   /**
+   * This component takes children so that it can ensure the worker has started before rendering the tree. This guarantees that
+   * all requests will be intercepted.
+   */
+  children?: React.ReactNode;
+
+  /**
    * The position of the toolbar.
    * @default 'top'
    */
