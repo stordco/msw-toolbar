@@ -60,6 +60,7 @@
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "autoprefixer": "^10.4.0",
+    "babel-jest": "^27.4.5",
     "husky": "^7.0.0",
     "msw": "^0.35.0",
     "postcss": "^8.3.7",
