@@ -1,0 +1,29 @@
+name: Publish Package to Github Packages
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install (Node)
+        uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
+          node-version: '14'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@stordco'
+
+      - name: Install deps and build (with cache)
+        uses: bahmutov/npm-install@v1
+
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
