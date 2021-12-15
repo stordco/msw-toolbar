@@ -26,11 +26,11 @@ const App = () => {
         <MSWToolbar
           worker={worker}
           apiUrl="http://www.example.com"
-          isEnabled={true}
+          isEnabled
           actions={
             <HStack spacing={2}>
               <Button onClick={() => alert('Hooray')}>Custom Action</Button>
-              <Button onClick={() => alert('Yadiddit')}>Another</Button>
+              <Button onClick={() => alert('Yadonediddit')}>Another</Button>
             </HStack>
           }
           prefix={APP_NAME}
@@ -46,7 +46,6 @@ const App = () => {
                 }
               })
             }
-            mt={50}
           >
             Make a request
           </Button>

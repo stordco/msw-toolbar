@@ -7,6 +7,7 @@ type SettingValueMap = {
   mode: WorkerMode;
   status: WorkerStatus;
   delay: string;
+  isHidden: 'true' | 'false';
 };
 
 type AllowedValueForSetting<Setting> = SettingValueMap[Setting &

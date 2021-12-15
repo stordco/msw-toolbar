@@ -1,6 +1,7 @@
 import { SetupWorkerApi } from 'msw';
+import React from 'react';
 
-export interface MSWToolbarProps {
+export interface MSWToolbarProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
    * A prefix will be prepended to the localStorage key we use for persisting settings. If you use this component
    * on many applications locally, you'll want to set this so configuration from app A doesn't impact app B.
@@ -23,13 +24,20 @@ export interface MSWToolbarProps {
    * An instance of the MSW worker returned from `setupWorker`.
    */
   worker: SetupWorkerApi | undefined;
+
   /**
    * This component takes children so that it can ensure the worker has started before rendering the tree. This guarantees that
    * all requests will be intercepted.
    */
   children?: React.ReactNode;
+
+  /**
+   * The position of the toolbar.
+   * @default 'top'
+   */
+  position?: 'top' | 'bottom';
 }
 
-export type Setting = 'mode' | 'delay' | 'status';
+export type Setting = 'mode' | 'delay' | 'status' | 'isHidden';
 export type WorkerStatus = 'enabled' | 'disabled';
 export type WorkerMode = 'normal' | 'error';
