@@ -27,7 +27,7 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "msw": "^0.35.0",
+    "msw": "*",
     "react": ">=16"
   },
   "husky": {
