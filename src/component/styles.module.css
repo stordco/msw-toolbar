@@ -7,7 +7,7 @@
 }
 
 .show-toolbar-button {
-  @apply fixed bottom-0 left-0 m-2 opacity-50 hover:opacity-100 transition z-10;
+  @apply fixed bottom-0 left-0 m-2 opacity-50 hover:opacity-100 transition z-[9999];
 }
 
 .msw-toolbar {
