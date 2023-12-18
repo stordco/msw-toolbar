@@ -1,16 +1,11 @@
 import * as React from 'react';
-import { rest } from 'msw';
-import {
-  SetupWorkerApi,
-  MockedRequest,
-  ResponseComposition,
-  RestContext,
-} from 'msw';
-import { usePrevious } from './hooks';
+import {http, HttpResponse} from 'msw';
+import {SetupWorker} from 'msw/browser';
+import {usePrevious} from './hooks';
 import styles from './styles.module.css';
-import { WorkerMode } from '../types';
-import { get, modes, set } from '../helpers';
-import { MSWToolbarProps } from '..';
+import {WorkerMode} from '../types';
+import {get, modes, set} from '../helpers';
+import {MSWToolbarProps} from '..';
 
 import MSWLogo from './msw-logo.svg';
 
@@ -23,7 +18,7 @@ import MSWLogo from './msw-logo.svg';
  * Delay: Allows you to set a global delay for all requests
  */
 export const MSWToolbar = ({
-  children = <div />,
+  children = <div/>,
   isEnabled = false,
   apiUrl = '',
   actions,
@@ -32,14 +27,14 @@ export const MSWToolbar = ({
   className,
   position = 'top',
   ...props
-}: MSWToolbarProps) => {
+  }: MSWToolbarProps) => {
   if ((isEnabled && !worker) || (isEnabled && worker && !worker.start)) {
     console.warn(
       'Unable to load MSWToolbar due to the worker being undefined. Please pass in a worker instance from setupWorker(...handlers).'
     );
   }
 
-  const workerRef = React.useRef<SetupWorkerApi>();
+  const workerRef = React.useRef<SetupWorker>();
 
   const [isReady, setIsReady] = React.useState(isEnabled ? false : true);
 
@@ -92,20 +87,9 @@ export const MSWToolbar = ({
         workerRef.current?.resetHandlers();
         return;
       case 'error':
-        workerRef.current?.use(
-          ...['get', 'post', 'put', 'patch', 'delete'].map(method =>
-            (rest as any)[method as any](
-              `${apiUrl}/*`,
-              (
-                _req: MockedRequest<any>,
-                res: ResponseComposition<any>,
-                _ctx: RestContext
-              ) => {
-                return res.networkError('Fake error');
-              }
-            )
-          )
-        );
+        workerRef.current?.use(http.all(`${apiUrl}/*`, () => {
+          return HttpResponse.error();
+        }));
         return;
       default:
         return;
@@ -136,7 +120,7 @@ export const MSWToolbar = ({
         }}
         hidden={!isHidden}
       >
-        <MSWLogo width={64} />
+        <MSWLogo width={64}/>
       </button>
 
       <div
@@ -171,8 +155,8 @@ export const MSWToolbar = ({
                   onChange={() => setWorkerEnabled(prev => !prev)}
                   checked={workerEnabled}
                 />
-                <div data-toggle-track />
-                <div data-toggle-handle />
+                <div data-toggle-track/>
+                <div data-toggle-handle/>
               </div>
             </label>
 
@@ -209,7 +193,7 @@ export const MSWToolbar = ({
           </div>
         </div>
 
-        <div className={styles.spacer} />
+        <div className={styles.spacer}/>
 
         {actions ? <div>{actions}</div> : null}
       </div>
