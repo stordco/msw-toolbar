@@ -1,4 +1,4 @@
-import { SetupWorkerApi } from 'msw';
+import type { SetupWorker } from 'msw/browser';
 import React from 'react';
 
 export interface MSWToolbarProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -23,7 +23,7 @@ export interface MSWToolbarProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
    * An instance of the MSW worker returned from `setupWorker`.
    */
-  worker: SetupWorkerApi | undefined;
+  worker: SetupWorker | undefined;
 
   /**
    * This component takes children so that it can ensure the worker has started before rendering the tree. This guarantees that
